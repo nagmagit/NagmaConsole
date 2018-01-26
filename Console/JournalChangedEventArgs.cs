@@ -7,15 +7,11 @@ namespace Nagma
 
     public class JournalChangedEventArgs : EventArgs
     {
-        // The text inserted to the journal.
-        public string Logged { get; }
-        // The moment when the text was logged (localized time).
-        public DateTime TimeStamp { get; }
+        public IJournalEntry Entry { get; }
 
-        public JournalChangedEventArgs(string text)
+        public JournalChangedEventArgs(IJournalEntry log)
         {
-            Logged = text;
-            TimeStamp = DateTime.Now;
+            Entry = log;
         }
     }
 

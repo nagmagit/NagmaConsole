@@ -13,7 +13,7 @@ namespace Nagma
         /// <summary>
         /// This is the journal itself. It's not recommended to write to it directly, instead use the Console.Log() method.
         /// </summary>
-        public List<string> Journal { get; } = new List<string>();
+        public List<IJournalEntry> Journal { get; } = new List<IJournalEntry>();
 
         /// <summary>
         /// Event raised when something is logged into the journal.
@@ -87,8 +87,24 @@ namespace Nagma
         /// </summary>
         public void Log(string text)
         {
-            Journal.Add(text);
-            JournalLogged.Invoke(new JournalChangedEventArgs(text));
+            var entry = new JournalLog(text);
+
+            Journal.Add(entry);
+            JournalLogged.Invoke(new JournalChangedEventArgs(entry));
+        }
+        public void Error(string text)
+        {
+            var entry = new JournalError(text);
+
+            Journal.Add(entry);
+            JournalLogged.Invoke(new JournalChangedEventArgs(entry));
+        }
+        public void Warn(string text)
+        {
+            var entry = new JournalWarn(text);
+
+            Journal.Add(entry);
+            JournalLogged.Invoke(new JournalChangedEventArgs(entry));
         }
         #endregion
 
@@ -155,7 +171,7 @@ namespace Nagma
 
         private void ConsoleVersion(string[] args)
         {
-            Log(String.Format("Current version: ", CONSOLE_VER));
+            Log(String.Format("Current version: {0}", CONSOLE_VER));
         }
 
         private void Echo(string[] args)

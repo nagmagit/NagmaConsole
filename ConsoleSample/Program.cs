@@ -28,6 +28,7 @@ namespace ConsoleSample
 
             while (true)
             {
+                System.Console.Write("> ");
                 var input = System.Console.ReadLine();
 
                 console.Execute(input); // Enter commands
@@ -41,8 +42,14 @@ namespace ConsoleSample
 
         private static void Console_JournalLogged(JournalChangedEventArgs e)
         {
+            // Here we check what type of JournalEntry is e and write a prefix accordingly.
+            string logType =
+                e.Entry is JournalError ? "ERR" :
+                e.Entry is JournalWarn  ? "WRN" :
+                                          "LOG";
+
             // This time we call the real console to output
-            System.Console.WriteLine(String.Format("{0} - {1}", e.TimeStamp, e.Logged));
+            System.Console.WriteLine(String.Format("[{0}] {1} - {2}", logType, e.Entry.TimeStamp, e.Entry.Message));
         }
 
         public static void SayBananaXTimes(string[] args)
