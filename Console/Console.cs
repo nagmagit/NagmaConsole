@@ -113,8 +113,7 @@ namespace Nagma
         /// </summary>
         public void Execute(string args)
         {
-            // TODO: Fix parameter splitting to NOT split "quotation marks"
-            var parameters = args.Split(' ');
+            var parameters = args.SmartDivision();
 
             if (CommandsList.ContainsKey(parameters[0]))
             {
