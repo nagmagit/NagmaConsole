@@ -49,6 +49,7 @@
     <Compile Include="Helpers.cs" />
     <Compile Include="JournalEntry.cs" />
     <Compile Include="JournalChangedEventArgs.cs" />
+    <Compile Include="StandardCommands.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
