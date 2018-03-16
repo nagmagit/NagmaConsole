@@ -7,7 +7,7 @@ namespace Nagma
 {
     public partial class Console
     {
-        public const string CONSOLE_VER = "0.1.0";
+        public const string CONSOLE_VER = "1.0.0";
 
         public Dictionary<string, Command> CommandsList { get; } = new Dictionary<string, Command>();
         /// <summary>
@@ -41,7 +41,7 @@ namespace Nagma
         }
 
         /// <summary>
-        /// Creates a new command. Its name will be equal to its method name.
+        /// Creates a new command. Its name will be equal to the method's name.
         /// </summary>
         /// <param name="commandAction">The method that will respond to the command.</param>
         public void AddCommand(Action<string[]> commandMethod)
@@ -59,7 +59,7 @@ namespace Nagma
         /// <param name="commandAction">The method that will respond to the command.</param>
         public void AddCommand(string commandAlias, Action<string[]> commandMethod)
         {
-            if (!CommandsList.ContainsKey(commandMethod.Method.Name))
+            if (!CommandsList.ContainsKey(commandAlias))
             {
                 var command = new Command(commandAlias, commandMethod);
                 CommandsList.Add(commandAlias, command);
@@ -73,11 +73,25 @@ namespace Nagma
         /// <param name="commandAction">The method that will respond to the command.</param>
         public void AddCommand(string commandAlias, string commandDescription, Action<string[]> commandMethod)
         {
-            if (!CommandsList.ContainsKey(commandMethod.Method.Name))
+            if (!CommandsList.ContainsKey(commandAlias))
             {
                 var command = new Command(commandAlias, commandDescription, commandMethod);
                 CommandsList.Add(commandAlias, command);
-
+            }
+            else
+            {
+                throw new ArgumentException("The alias for this command is already in use.");
+            }
+        }
+        /// <summary>
+        /// Removes a command.
+        /// </summary>
+        /// <param name="commandName">The alias of the command.</param>
+        public void RemoveCommand(string commandAlias)
+        {
+            if (CommandsList.ContainsKey(commandAlias))
+            {
+                CommandsList.Remove(commandAlias);
             }
         }
 
@@ -92,14 +106,14 @@ namespace Nagma
             Journal.Add(entry);
             JournalLogged.Invoke(new JournalChangedEventArgs(entry));
         }
-        public void Error(string text)
+        public void LogError(string text)
         {
             var entry = new JournalError(text);
 
             Journal.Add(entry);
             JournalLogged.Invoke(new JournalChangedEventArgs(entry));
         }
-        public void Warn(string text)
+        public void LogWarn(string text)
         {
             var entry = new JournalWarn(text);
 
@@ -115,6 +129,8 @@ namespace Nagma
         {
             var parameters = args.SmartDivision();
 
+            if (String.IsNullOrEmpty(args.Trim(' ', '\t'))) return;
+
             if (CommandsList.ContainsKey(parameters[0]))
             {
                 var command = CommandsList[parameters[0]];
@@ -125,15 +141,19 @@ namespace Nagma
                 }
                 catch (Exception e)
                 {
-                    Log(String.Format("The command outputted an error: \"{0}\"", e.Message));
+                    LogError(String.Format("The command outputted an error: \"{0}\"", e.Message));
                 }
+            }
+            else
+            {
+                LogError("Command not found.");
             }
         }
 
         private void AddStandardCommands()
         {
             // Add the standard commands
-            AddCommand("availablecommands", "Shows all the available commands.", ShowAllCommands);
+            AddCommand("help", "Shows all the available commands.", ShowAllCommands);
             AddCommand("consoleversion", "Shows the current version of the Console assembly.", ConsoleVersion);
             AddCommand("clear", "Clears the console's journal.", Clear);
             AddCommand("echo", "Outputs the given text.", Echo);

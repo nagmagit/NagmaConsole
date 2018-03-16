@@ -7,6 +7,9 @@ namespace Nagma
 
     public class JournalChangedEventArgs : EventArgs
     {
+        /// <summary>
+        /// The entry added to the journal
+        /// </summary>
         public IJournalEntry Entry { get; }
 
         public JournalChangedEventArgs(IJournalEntry log)
@@ -17,7 +20,9 @@ namespace Nagma
 
     public class JournalWhipedEventArgs : EventArgs
     {
-        // The moment when the journal was whiped (localized time).
+        /// <summary>
+        /// The moment when the journal was whiped (localized time).
+        /// </summary>
         public DateTime TimeStamp { get; }
 
         public JournalWhipedEventArgs()

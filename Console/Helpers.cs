@@ -14,6 +14,9 @@ namespace Nagma
             return result;
         }
 
+        /// <summary>
+        /// Splits an array in every space character unless it is surrounded by quotation marks.
+        /// </summary>
         public static string[] SmartDivision(this string str)
         {
             return Regex.Matches(str, @"[\""].+?[\""]|[^ ]+")

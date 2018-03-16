@@ -24,11 +24,11 @@ namespace Nagma
 
                 if (String.IsNullOrEmpty(command.Value.CommandDescription))
                 {
-                    sb.AppendLine(String.Format("{0} No description.", nameToOut));
+                    sb.AppendLine(String.Format("{0} : No description.", nameToOut));
                 }
                 else
                 {
-                    sb.AppendLine(String.Format("{0} {1}", nameToOut, command.Value.CommandDescription));
+                    sb.AppendLine(String.Format("{0} : {1}", nameToOut, command.Value.CommandDescription));
                 }
             }
 

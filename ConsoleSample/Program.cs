@@ -13,22 +13,25 @@ namespace ConsoleSample
 
         static void Main(string[] args)
         {
-            console = new Nagma.Console(); // We have to instanciate the console
+            // Create a new instance of the console
+            // The standard commands can be ommitted by passing a "false"
+            // to the "standardCommands" parameter of the constructor
+            console = new Nagma.Console();
 
-            // We subscribe to the events.
+            // Subscribe to the events.
             console.JournalLogged += Console_JournalLogged; // This event is raised when Console.Log is called
             console.JournalWhiped += Console_JournalWhiped; // This event is raised by the "clear" command
 
-            // We add some commands
+            // Add some commands
             console.AddCommand(SayBananaXTimes);
-            console.AddCommand("shrug", SayShrugFace);
+            console.AddCommand("repeat", SayRepeat);
             console.AddCommand("saybanana", "Just outputs \"banana\".", SayBanana);
 
-            console.Execute("availablecommands"); // We execute the built-in command "availablecommands"
+            console.Execute("help"); // We execute the built-in command "help"
 
             while (true)
             {
-                System.Console.Write("> ");
+                System.Console.Write("> "); // Create a good ol' cursor
                 var input = System.Console.ReadLine();
 
                 console.Execute(input); // Enter commands
@@ -42,27 +45,53 @@ namespace ConsoleSample
 
         private static void Console_JournalLogged(JournalChangedEventArgs e)
         {
-            // Here we check what type of JournalEntry is e and write a prefix accordingly.
-            string logType =
-                e.Entry is JournalError ? "ERR" :
-                e.Entry is JournalWarn  ? "WRN" :
-                                          "LOG";
+            var logType = String.Empty; // 
+            var logColor = ConsoleColor.White;
+
+            // Here we check what type of JournalEntry is e and write a prefix and a color accordingly.
+            if (e.Entry is JournalError)
+            {
+                logType = "ERR";
+                logColor = ConsoleColor.Red;
+            }
+            else if (e.Entry is JournalWarn)
+            {
+                logType = "WRN";
+                logColor = ConsoleColor.Yellow;
+            }
+            else
+            {
+                logType = "LOG";
+            }
 
             // This time we call the real console to output
-            System.Console.WriteLine(String.Format("[{0}] {1} - {2}", logType, e.Entry.TimeStamp, e.Entry.Message));
+            WriteColored(String.Format("[{0}] {1} - {2}", logType, e.Entry.TimeStamp, e.Entry.Message), logColor);
         }
 
+        public static void WriteColored(string text, ConsoleColor color)
+        {
+            // This just saves the current forecolor of the System console and sets it back after writing the text.
+            var prevColor = System.Console.ForegroundColor;
+
+            System.Console.ForegroundColor = color;
+            System.Console.WriteLine(text);
+            System.Console.ForegroundColor = prevColor;
+        }
+
+        // Test commands
         public static void SayBananaXTimes(string[] args)
         {
             for (int i = 0; i < Int32.Parse(args[1]); i++) // Here, an error might occur. Try entering a non numeric character
             {
                 console.Log("banana");
             }
-            
         }
-        public static void SayShrugFace(string[] args)
+        public static void SayRepeat(string[] args)
         {
-            console.Log(@"¯\_(ツ)_/¯");
+            for (int i = 0; i < Int32.Parse(args[2]); i++) // Here, an error might occur. Try entering a non numeric character
+            {
+                console.Log(args[1]);
+            }
         }
         public static void SayBanana(string[] args)
         {

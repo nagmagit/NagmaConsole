@@ -9,7 +9,7 @@ namespace Nagma
         /// </summary>
         public string CommandName { get; }
         /// <summary>
-        /// This is the description of the command can will be shown with the command "availablecommands".
+        /// This is the description of the command that will be shown with the command "availablecommands".
         /// </summary>
         public string CommandDescription { get; }
         /// <summary>
@@ -23,7 +23,7 @@ namespace Nagma
         /// <param name="commandAction">The method that will respond to the command.</param>
         public Command(Action<string[]> commandAction)
         {
-            CommandName = commandAction.Method.Name.Trim(' ');
+            CommandName = commandAction.Method.Name;
             CommandAction = commandAction;
             CommandDescription = String.Empty;
         }
