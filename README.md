@@ -6,6 +6,9 @@ A simple console class that can be used in any C# project.
 
 You can download the latest binary for .NET Framework 3.5 here.
 
+### Why .NET Framework 3.5?
+The main reason at the beggining of the project was to have a console class that could be used in a Unity engine project, which, at the time, compiled to Mono 3.5.
+
 ## How to use
 
 You can find an example implementation in the "ConsoleSample" project.
@@ -26,4 +29,4 @@ This project has (almost) no license - see the [UNLICENSE](UNLICENSE) file for d
 
 ## Acknoledgements
 
-Anyone that finds this project useful, since this is my first serious project that i published here.
+Anyone that finds this project useful, since this is my first serious project that I publish here.
